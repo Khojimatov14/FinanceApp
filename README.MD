@@ -11,7 +11,7 @@ Bu loyiha foydalanuvchilarni boshqarish va ularning moliyaviy tranzaksiyalarini 
 - PostgreSQL
 - Lombok
 
-## Postman
+### Postman
 
 Tayyor http so'rovlar uchun quyidagi havolaga o'ting:
 
