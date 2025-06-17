@@ -1,10 +1,14 @@
 package financeapp.controller;
 
 import java.util.List;
+import java.util.Optional;
 import financeapp.model.User;
+import org.springframework.http.HttpStatus;
 import financeapp.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 @RestController
 @RequestMapping("/api/users")
@@ -21,8 +25,17 @@ public class UserController {
 
     // Yangi foydalanuvchini yaratadi va bazaga saqlaydi
     @PostMapping
-    public User createUser(@RequestBody User user) {
-        return userRepository.save(user);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
+
+        if (existingUser.isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("A user with this email already exists.");
+        }
+
+        User savedUser = userRepository.save(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
     // Belgilangan ID bo‘yicha foydalanuvchini yangilaydi (ism, email, balans)
