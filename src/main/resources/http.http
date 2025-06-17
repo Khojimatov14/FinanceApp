@@ -38,4 +38,4 @@ GET http://localhost:8080/api/transactions/date?from=2025-06-01&to=2025-06-30
 
 
 ### Transfer founds by user ID to user ID
-POST http://localhost:8080/api/transactions/transfer?fromUserId=1&toUserId=2&amount=500&description="Transfer to friend"
+POST http://localhost:8080/api/transactions/transfer?fromUserId=1&toUserId=2&amount=100&description="Transfer to friend"

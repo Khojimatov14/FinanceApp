@@ -46,7 +46,7 @@ public class TransactionController {
         return transactionRepository.findByTimestampBetween(fromDate, toDate);
     }
 
-    // Foydalanuvchi balansini oshirish yoki kamaytirish uchun tranzaksiya yaratadi
+    // Foydalanuvchi balansiga qo'shish yoki kamaytirish uchun tranzaksiya yaratadi
     @PostMapping
     public Transaction createTransaction(@RequestParam Long userId,
                                          @RequestParam Double amount,
