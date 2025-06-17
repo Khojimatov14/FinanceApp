@@ -1,0 +1,41 @@
+### Add new user
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "name": "Ali",
+  "email": "ali@example.com",
+  "balance": 10000
+}
+
+
+### Get user by ID
+GET http://localhost:8080/api/users/4
+
+
+### Get all users
+GET http://localhost:8080/api/users
+
+
+### Add funds by user ID
+POST http://localhost:8080/api/transactions?userId=1&amount=1000&description=Salary
+
+
+### Withdraw funds by user ID
+POST http://localhost:8080/api/transactions?userId=1&amount=-1000&description=Salary
+
+
+### Get all transactions
+GET http://localhost:8080/api/transactions
+
+
+### Get all transactions by user ID
+GET http://localhost:8080/api/transactions/user/1
+
+
+### Get transactions by date
+GET http://localhost:8080/api/transactions/date?from=2025-06-01&to=2025-06-30
+
+
+### Transfer founds by user ID to user ID
+POST http://localhost:8080/api/transactions/transfer?fromUserId=1&toUserId=2&amount=500&description="Transfer to friend"
