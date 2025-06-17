@@ -1,6 +1,6 @@
-# 💸 Moliya Dasturi (Finance App)
+# 💸 FinanceApp
 
-## 📋 Loyihaga qisqacha izoh (O‘zbek tilida)
+## 📋 Loyihaga qisqacha izoh
 
 Bu loyiha foydalanuvchilarni boshqarish va ularning moliyaviy tranzaksiyalarini yuritish uchun ishlab chiqilgan oddiy REST API ilova hisoblanadi.
 
@@ -11,8 +11,15 @@ Bu loyiha foydalanuvchilarni boshqarish va ularning moliyaviy tranzaksiyalarini 
 - PostgreSQL
 - Lombok
 
+## Postman
+
+Tayyor http so'rovlar uchun quyidagi havolaga o'ting:
+
+https://www.postman.com/cloudy-water-777712/financeapp/collection/7agxn54/financeapp-api-collection?action=share&creator=18494536
+
 ### Foydalanuvchi qo‘shish
 POST 'https://financeapptest.up.railway.app/api/users
+
 Content-Type: application/json
 
 {
