@@ -71,7 +71,7 @@ public class UserController {
         return ResponseEntity.ok(jwtToken);
     }
 
-
+    // Token bo'yicha foydalanuvchi malumotlarini qaytaradi
     @GetMapping("/me")
     public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -92,23 +92,6 @@ public class UserController {
     }
 
 
-    // Yangi foydalanuvchini yaratadi va bazaga saqlaydi
-    @PostMapping
-    public ResponseEntity<?> createUser(@RequestBody User user) {
-        Optional<User> existingUser = userRepository.findByEmail(user.getEmail());
-
-        if (existingUser.isPresent()) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body("Bu email bilan foydalanuvchi allaqachon mavjud");
-        }
-
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // parolni shifrlash
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-    }
-
-
     // Belgilangan ID bo‘yicha foydalanuvchini yangilaydi
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
@@ -117,12 +100,5 @@ public class UserController {
         user.setEmail(userDetails.getEmail());
         user.setBalance(userDetails.getBalance());
         return userRepository.save(user);
-    }
-
-
-    // ID bo‘yicha bitta foydalanuvchini qaytaradi
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable Long id) {
-        return userRepository.findById(id).orElseThrow();
     }
 }
