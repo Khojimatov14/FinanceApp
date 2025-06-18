@@ -34,13 +34,13 @@ public class UserController {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body("Bu email bilan foydalanuvchi allaqachon mavjud");
+                    .body("status: 409\n message: Bu email allaqachon ro'yxatdan o'tgan");
         }
 
         User user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword())) // parolni shifrlab saqlaymiz
+                .password(passwordEncoder.encode(request.getPassword()))
                 .balance(BigDecimal.ZERO)
                 .build();
 
