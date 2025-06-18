@@ -5,24 +5,23 @@ import java.math.BigDecimal;
 import financeapp.model.User;
 import java.time.LocalDateTime;
 import financeapp.model.Transaction;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import financeapp.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import financeapp.repository.TransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
     // TransactionRepository va UserRepository ni Spring orqali bog'lash
-    @Autowired
-    private TransactionRepository transactionRepository;
+    private final TransactionRepository transactionRepository;
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     // Barcha tranzaksiyalar ro'yxatini qaytaradi
     @GetMapping

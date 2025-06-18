@@ -2,26 +2,95 @@ package financeapp.controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
 import financeapp.model.User;
+import financeapp.dto.LoginRequest;
+import financeapp.dto.RegisterRequest;
+import financeapp.security.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import financeapp.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/users")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final JwtService jwtService;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
+    // Foydalanuvchini ro'yxatdan o'tkazadi
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body("Bu email bilan foydalanuvchi allaqachon mavjud");
+        }
+
+        User user = User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword())) // parolni shifrlab saqlaymiz
+                .balance(BigDecimal.ZERO)
+                .build();
+
+        userRepository.save(user);
+
+        return ResponseEntity.ok("Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi");
+    }
+
+
+    // Foydalanuvchini login qiladi va JWT token qaytaradi
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginRequest request) {
+        Optional<User> userOptional = userRepository.findByEmail(request.getEmail());
+
+        // Email mavjudligini tekshiradi
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email yoki parol noto'g'ri");
+        }
+
+        User user = userOptional.get();
+
+        // Parol to'g'riligini tekshiradi
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email yoki parol noto'g'ri");
+        }
+
+        // Agar email va parol to'g'ri bo‘lsa, JWT token yaratamiz
+        String jwtToken = jwtService.generateToken(user);
+
+        return ResponseEntity.ok(jwtToken);
+    }
+
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Foydalanuvchi aniqlanmadi");
+        }
+
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(user);
+    }
+
 
     // Barcha foydalanuvchilarni ro‘yxatini qaytaradi
     @GetMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
 
     // Yangi foydalanuvchini yaratadi va bazaga saqlaydi
     @PostMapping
@@ -31,14 +100,16 @@ public class UserController {
         if (existingUser.isPresent()) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body("A user with this email already exists.");
+                    .body("Bu email bilan foydalanuvchi allaqachon mavjud");
         }
 
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // parolni shifrlash
         User savedUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
-    // Belgilangan ID bo‘yicha foydalanuvchini yangilaydi (ism, email, balans)
+
+    // Belgilangan ID bo‘yicha foydalanuvchini yangilaydi
     @PutMapping("/{id}")
     public User updateUser(@PathVariable Long id, @RequestBody User userDetails) {
         User user = userRepository.findById(id).orElseThrow();
@@ -47,6 +118,7 @@ public class UserController {
         user.setBalance(userDetails.getBalance());
         return userRepository.save(user);
     }
+
 
     // ID bo‘yicha bitta foydalanuvchini qaytaradi
     @GetMapping("/{id}")
