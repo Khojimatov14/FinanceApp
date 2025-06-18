@@ -46,7 +46,7 @@ public class UserController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("Foydalanuvchi muvaffaqiyatli ro'yxatdan o'tdi");
+        return ResponseEntity.ok("status: 200\n message: Siz muvaffaqiyatli ro'yxatdan o'tdingiz");
     }
 
 
