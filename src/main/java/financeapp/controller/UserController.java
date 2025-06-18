@@ -34,7 +34,7 @@ public class UserController {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
-                    .body("status: 409\n message: Bu email allaqachon ro'yxatdan o'tgan");
+                    .body("status: 409\nmessage: Bu email allaqachon ro'yxatdan o'tgan");
         }
 
         User user = User.builder()
@@ -46,7 +46,7 @@ public class UserController {
 
         userRepository.save(user);
 
-        return ResponseEntity.ok("status: 200\n message: Siz muvaffaqiyatli ro'yxatdan o'tdingiz");
+        return ResponseEntity.ok("status: 200\nmessage: Siz muvaffaqiyatli ro'yxatdan o'tdingiz");
     }
 
 

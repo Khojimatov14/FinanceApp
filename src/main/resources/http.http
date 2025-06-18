@@ -36,14 +36,26 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1ha
 
 
 ### Add funds by user ID
-POST http://localhost:8080/api/transactions?userId=2&amount=1000&description=Salary
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1haWwiOiJhbnZhckBleGFtcGxlLmNvbSIsInN1YiI6ImFudmFyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjYzNjc1LCJleHAiOjE3NTAyNjcyNzV9.Xxm3o6TQJi8i3AnyYDDK2oHW7-GPg2x6VP-lLbdGIUw
+POST http://localhost:8080/api/transactions
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxpIiwiaWQiOjMsImVtYWlsIjoiYWxpQGV4YW1wbGUuY29tIiwic3ViIjoiYWxpQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjY4MjI4LCJleHAiOjE3NTAzNTQ2Mjh9.sppT4NlsQQrQevK46KCkFadjpa4DPQIgmV91MB7DxRY
+Content-Type: application/json
 
+{
+  "userId": 2,
+  "amount": 1000,
+  "description": "Salary"
+}
 
 ### Withdraw funds by user ID
-POST http://localhost:8080/api/transactions?userId=2&amount=-100&description=Salary
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1haWwiOiJhbnZhckBleGFtcGxlLmNvbSIsInN1YiI6ImFudmFyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjYzNjc1LCJleHAiOjE3NTAyNjcyNzV9.Xxm3o6TQJi8i3AnyYDDK2oHW7-GPg2x6VP-lLbdGIUw
+POST http://localhost:8080/api/transactions
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxpIiwiaWQiOjMsImVtYWlsIjoiYWxpQGV4YW1wbGUuY29tIiwic3ViIjoiYWxpQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjY4MjI4LCJleHAiOjE3NTAzNTQ2Mjh9.sppT4NlsQQrQevK46KCkFadjpa4DPQIgmV91MB7DxRY
+Content-Type: application/json
 
+{
+  "userId": 2,
+  "amount": -100,
+  "description": "Fine"
+}
 
 ### Get all transactions
 GET http://localhost:8080/api/transactions
@@ -58,9 +70,16 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1ha
 
 ### Get transactions by date
 GET http://localhost:8080/api/transactions/date?from=2025-06-01&to=2025-06-30
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1haWwiOiJhbnZhckBleGFtcGxlLmNvbSIsInN1YiI6ImFudmFyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjYzNjc1LCJleHAiOjE3NTAyNjcyNzV9.Xxm3o6TQJi8i3AnyYDDK2oHW7-GPg2x6VP-lLbdGIUw
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxpIiwiaWQiOjMsImVtYWlsIjoiYWxpQGV4YW1wbGUuY29tIiwic3ViIjoiYWxpQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjY4MjI4LCJleHAiOjE3NTAzNTQ2Mjh9.sppT4NlsQQrQevK46KCkFadjpa4DPQIgmV91MB7DxRY
 
 
 ### Transfer founds by user ID to user ID
-POST http://localhost:8080/api/transactions/transfer?fromUserId=2&toUserId=2&amount=100&description="Transfer to friend"
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQW52YXIiLCJpZCI6MiwiZW1haWwiOiJhbnZhckBleGFtcGxlLmNvbSIsInN1YiI6ImFudmFyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjYzNjc1LCJleHAiOjE3NTAyNjcyNzV9.Xxm3o6TQJi8i3AnyYDDK2oHW7-GPg2x6VP-lLbdGIUw
+POST http://localhost:8080/api/transactions/transfer
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQWxpIiwiaWQiOjMsImVtYWlsIjoiYWxpQGV4YW1wbGUuY29tIiwic3ViIjoiYWxpQGV4YW1wbGUuY29tIiwiaWF0IjoxNzUwMjY4MjI4LCJleHAiOjE3NTAzNTQ2Mjh9.sppT4NlsQQrQevK46KCkFadjpa4DPQIgmV91MB7DxRY
+Content-Type: application/json
+
+{
+  "fromUserId": 2,
+  "toUserId": 3,
+  "amount": 100
+}

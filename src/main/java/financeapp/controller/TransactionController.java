@@ -2,6 +2,9 @@ package financeapp.controller;
 
 import java.util.List;
 import java.math.BigDecimal;
+
+import financeapp.dto.CreateTransactionRequest;
+import financeapp.dto.TransferRequest;
 import financeapp.model.User;
 import java.time.LocalDateTime;
 import financeapp.model.Transaction;
@@ -18,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/transactions")
 public class TransactionController {
 
-    // TransactionRepository va UserRepository ni Spring orqali bog'lash
     private final TransactionRepository transactionRepository;
     private final UserRepository userRepository;
 
@@ -46,29 +48,27 @@ public class TransactionController {
 
     // Foydalanuvchi balansiga qo'shish yoki kamaytirish uchun tranzaksiya yaratadi
     @PostMapping
-    public Transaction createTransaction(@RequestParam Long userId,
-                                         @RequestParam Double amount,
-                                         @RequestParam(required = false) String description) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public ResponseEntity<?> createTransaction(@RequestBody CreateTransactionRequest request) {
+        User user = userRepository.findById(request.getUserId()).orElseThrow();
 
         Transaction tx = new Transaction();
-        tx.setAmount(java.math.BigDecimal.valueOf(amount));
-        tx.setDescription(description);
+        tx.setAmount(request.getAmount());
+        tx.setDescription(request.getDescription());
         tx.setUser(user);
 
-        // Balansni yangilaydi (ijobiy bo'lsa qo'shiladi, manfiy bo'lsa ayiriladi)
-        user.setBalance(user.getBalance().add(java.math.BigDecimal.valueOf(amount)));
+        // Balansni yangilaydi (ijobiy bo‘lsa qo‘shiladi, manfiy bo‘lsa ayiriladi)
+        user.setBalance(user.getBalance().add(request.getAmount()));
         userRepository.save(user);
 
-        return transactionRepository.save(tx);
+        Transaction savedTx = transactionRepository.save(tx);
+        return ResponseEntity.status(201).body(savedTx);
     }
 
     // Pulni bir foydalanuvchidan boshqasiga o'tkazadi
     @PostMapping("/transfer")
-    public ResponseEntity<String> transferBalance(@RequestParam Long fromUserId,
-                                                  @RequestParam Long toUserId,
-                                                  @RequestParam BigDecimal amount,
-                                                  @RequestParam String description) {
+    public ResponseEntity<?> transferBalance(@RequestBody TransferRequest request) {
+
+        BigDecimal amount = request.getAmount();
 
         // Miqdor musbat bo'lishi shart
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
@@ -76,16 +76,16 @@ public class TransactionController {
         }
 
         // Jo'natuvchi topish
-        User fromUser = userRepository.findById(fromUserId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sender not found"));
+        User fromUser = userRepository.findById(request.getFromUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Yuboruvchi topilmadi"));
 
         // Qabul qiluvchini topish
-        User toUser = userRepository.findById(toUserId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Receiver not found"));
+        User toUser = userRepository.findById(request.getToUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Qabul qiluvchi topilmadi"));
 
         // Jo'natuvchida yetarli mablag' borligini tekshiradi
         if (fromUser.getBalance().compareTo(amount) < 0) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Insufficient balance");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Balans yetarli emas");
         }
 
         // Pulni jo'natuvchi hisobidan ayirish
@@ -99,7 +99,7 @@ public class TransactionController {
         // Jo'natuvchi uchun chiqim tranzaksiyasini yaratish
         Transaction outgoing = Transaction.builder()
                 .amount(amount.negate()) // Manfiy miqdor
-                .description(description)
+                .description(request.getDescription())
                 .timestamp(LocalDateTime.now())
                 .user(fromUser)
                 .build();
@@ -116,6 +116,6 @@ public class TransactionController {
         transactionRepository.save(outgoing);
         transactionRepository.save(incoming);
 
-        return ResponseEntity.ok("Transfer successful");
+        return ResponseEntity.ok("O'tkazma muvaffaqiyatli yakunlandi");
     }
 }
