@@ -20,7 +20,6 @@ public class TransactionController {
 
     // TransactionRepository va UserRepository ni Spring orqali bog'lash
     private final TransactionRepository transactionRepository;
-
     private final UserRepository userRepository;
 
     // Barcha tranzaksiyalar ro'yxatini qaytaradi

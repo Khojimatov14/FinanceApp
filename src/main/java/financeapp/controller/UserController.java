@@ -3,6 +3,8 @@ package financeapp.controller;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigDecimal;
+
+import financeapp.dto.AuthenticationResponse;
 import financeapp.model.User;
 import financeapp.dto.LoginRequest;
 import financeapp.dto.RegisterRequest;
@@ -55,20 +57,22 @@ public class UserController {
 
         // Email mavjudligini tekshiradi
         if (userOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email yoki parol noto'g'ri");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new AuthenticationResponse(401, "Email yoki parol noto'g'ri", null));
         }
 
         User user = userOptional.get();
 
         // Parol to'g'riligini tekshiradi
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email yoki parol noto'g'ri");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new AuthenticationResponse(401, "Email yoki parol noto'g'ri", null));
         }
 
         // Agar email va parol to'g'ri bo‘lsa, JWT token yaratamiz
         String jwtToken = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(jwtToken);
+        return ResponseEntity.ok(new AuthenticationResponse(200, "Login muvaffaqiyatli amalga oshdi", jwtToken));
     }
 
     // Token bo'yicha foydalanuvchi malumotlarini qaytaradi

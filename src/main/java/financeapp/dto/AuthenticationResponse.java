@@ -8,5 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class AuthenticationResponse {
-    private String token; // Tizimga muvaffaqiyatli kirganda qaytariladigan JWT token
+    private int status;
+    private String message;
+    private String token;
+
 }
