@@ -11,43 +11,112 @@ Bu loyiha foydalanuvchilarni boshqarish va ularning moliyaviy tranzaksiyalarini 
 - PostgreSQL
 - Lombok
 
+---
+
 ### Postman
 
-Tayyor http so'rovlar uchun quyidagi havolaga o'ting:
+Tayyor http so'rovlar uchun quyidagi havolaga o'ting:  
+https://www.postman.com/cloudy-water-777712/financeapp/collection/y9pa5c4/financeapp-api?action=share&source=copy-link&creator=18494536
 
-https://www.postman.com/cloudy-water-777712/financeapp/collection/7agxn54/financeapp-api-collection?action=share&creator=18494536
+---
 
-### Foydalanuvchi qo‘shish
-POST 'https://financeapptest.up.railway.app/api/users
+### Ro'yxatdan o'tish
+POST https://financeapptest.up.railway.app/api/users/register  
+`Content-Type: application/json`
 
-Content-Type: application/json
-
-{
-"name": "Ali",
-"email": "ali@example.com",
-"balance": 10000
+<pre>
+{  
+"name": "Ali",  
+"email": "ali@example.com",  
+"password": 123456  
 }
+</pre>
+---
 
-### Foydalanuvchini ID orqali olish
-GET 'https://financeapptest.up.railway.app/api/users/1
+### Login qilish
+POST https://financeapptest.up.railway.app/api/users/login   
+`Content-Type: application/json`
 
-### Barcha foydalanuvchilarni olish
-GET 'https://financeapptest.up.railway.app/api/users
+<pre>
+{
+    "email": "ali@example.com",
+    "password": 123456
+}
+</pre>
 
-### Hisobga pul qo‘shish
-POST 'https://financeapptest.up.railway.app/api/transactions?userId=1&amount=1000&description=Salary
+---
 
-### Hisobdan pul yechish
-POST 'https://financeapptest.up.railway.app/api/transactions?userId=1&amount=-1000&description=Withdrawal
+### Token orqali foydalanuvchi malumotlarini olish
+GET https://financeapptest.up.railway.app/api/users/me  
+`Authorization: Bearer <Token>`
 
-### Barcha tranzaksiyalarni olish
-GET 'https://financeapptest.up.railway.app/api/transactions
+---
 
-### Foydalanuvchi tranzaksiyalarini olish
-GET 'https://financeapptest.up.railway.app/api/transactions/user/1
+### Barcha foydalanuvchilar ro'yxatini olish
+GET 'https://financeapptest.up.railway.app/api/users  
+`Authorization: Bearer <Token>`  
 
-### Sana bo‘yicha tranzaksiyalarni olish
-GET 'https://financeapptest.up.railway.app/api/transactions/date?from=2025-06-01&to=2025-06-30
+---
 
-### Bir foydalanuvchidan boshqasiga pul o‘tkazish
-POST 'https://financeapptest.up.railway.app/api/transactions/transfer?fromUserId=1&toUserId=2&amount=500&description="Transfer to friend"
+### Foydalanuvchi hisobiga pul qo‘shish
+POST https://financeapptest.up.railway.app/api/transactions  
+`Authorization: Bearer <Token>`  
+`Content-Type: application/json`
+
+<pre>
+{
+  "userId": 1,
+  "amount": 1000,
+  "description": "Salary"
+}
+</pre>
+
+---
+
+### Foydalanuvchi hisobidan pul o'chirish
+POST https://financeapptest.up.railway.app/api/transactions  
+`Authorization: Bearer <Token>`  
+`Content-Type: application/json`
+
+<pre>
+{
+  "userId": 1,
+  "amount": -100,
+  "description": "Fine"
+}
+</pre>
+
+---
+
+### Bir foydalanuvchidan ikkinchisiga pul o'tkazish
+POST https://financeapptest.up.railway.app/api/transactions/transfer  
+`Authorization: Bearer <Token>`  
+`Content-Type: application/json`
+
+<pre>
+{
+  "fromUserId": 1,
+  "toUserId": 2,
+  "amount": 100
+}
+</pre>
+
+---
+
+### Foydalanuvchiga tegish barcha tranzaksiyalarini olish
+GET https://financeapptest.up.railway.app/api/transactions/user/1  
+`Authorization: Bearer <Token>`
+
+---
+
+### Sana bo'yicha tranzaksiyalarini olish
+GET https://financeapptest.up.railway.app/api/transactions/date?from=2025-06-10&to=2025-06-18  
+`Authorization: Bearer <Token>`
+
+---
+
+### Barcha tranzaksiyalar ro'yxatini olish
+GET https://financeapptest.up.railway.app/api/transactions  
+`Authorization: Bearer <Token>`
+
+---
